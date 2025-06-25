@@ -8,25 +8,38 @@
 </head>
 <body>
     <header>
-        <h1>Search & Detail Dashboard</h1>
-        <p class="subtitle">Select an item from the search results to view detailed information</p>
+        <h1>Lista de pacientes</h1>
+        <p class="subtitle">Selecione um item para uma visualização detalhada</p>
     </header>
-    
     <div class="dashboard-container">
         <div class="left-panel">
             <div class="panel-header">Search</div>
             <div class="search-container">
                 <input type="text" id="searchInput" placeholder="Search items...">
             </div>
-            <!-- Search results will go here -->
+            
+            <!-- Scrollable results container -->
+            <div class="results-container" id="resultsContainer">
+                <!-- Results will be populated here by JavaScript -->
+            </div>
+            
+            <!-- Row template (hidden) -->
+            <template id="rowTemplate">
+                <div class="result-row">
+                    <span class="item-name"></span>
+                    <span class="item-details"></span>
+                </div>
+            </template>
         </div>
         
         <div class="right-panel">
             <div class="panel-header">Details</div>
-            <!-- Detailed information will go here -->
+            <div id="detailContent">
+                <!-- Detailed information will be populated here -->
+            </div>
         </div>
     </div>
     
-    <script src="script.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>

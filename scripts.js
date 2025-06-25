@@ -17,19 +17,6 @@ const getList = async () => {
     });
 }
 
-/*
-  --------------------------------------------------------------------------------------
-  Chamada da função para carregamento inicial dos dados
-  --------------------------------------------------------------------------------------
-*/
-getList()
-
-
-/*
-  --------------------------------------------------------------------------------------
-  Função para colocar um item na lista do servidor via requisição POST
-  --------------------------------------------------------------------------------------
-*/
 const postItem = async (inputProduct, inputQuantity, inputPrice) => {
   const formData = new FormData();
   formData.append('nome', inputProduct);
@@ -143,3 +130,84 @@ const insertList = (nameProduct, quantity, price) => {
 
   removeElement()
 }
+
+
+// DOM elements
+const resultsContainer = document.getElementById('resultsContainer');
+const rowTemplate = document.getElementById('rowTemplate');
+const detailContent = document.getElementById('detailContent');
+
+// Sample data - replace with your actual data
+const items = [
+    { id: 1, name: "Item One", details: "Description for item one", fullInfo: "Complete details for item one..." },
+    { id: 2, name: "Item Two", details: "Description for item two", fullInfo: "Complete details for item two..." },
+    { id: 3, name: "Item Three", details: "Description for item three", fullInfo: "Complete details for item three..." },
+    // ... add more items
+];
+
+// Populate results list
+function populateResults() {
+    resultsContainer.innerHTML = ''; // Clear existing content
+    
+    items.forEach(item => {
+        // Clone the template
+        const clone = rowTemplate.content.cloneNode(true);
+        const row = clone.querySelector('.result-row');
+        
+        // Populate with data
+        row.querySelector('.item-name').textContent = item.name;
+        row.querySelector('.item-details').textContent = item.details;
+        
+        // Add click handler
+        row.addEventListener('click', () => {
+            // Remove previous selection
+            document.querySelectorAll('.result-row').forEach(r => {
+                r.classList.remove('selected');
+            });
+            
+            // Select current row
+            row.classList.add('selected');
+            
+            // Show details in right panel
+            showDetails(item);
+        });
+        
+        // Add to container
+        resultsContainer.appendChild(clone);
+    });
+}
+
+// Show item details
+function showDetails(item) {
+    detailContent.innerHTML = `
+        <h3>${item.name}</h3>
+        <p>${item.fullInfo}</p>
+        <div class="meta-info">
+            <p><strong>ID:</strong> ${item.id}</p>
+            <p><strong>Last Updated:</strong> ${new Date().toLocaleDateString()}</p>
+        </div>
+    `;
+}
+
+populateResults();
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    populateResults();
+    
+    // Add search functionality
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = items.filter(item => 
+            item.name.toLowerCase().includes(term) || 
+            item.details.toLowerCase().includes(term)
+        );
+        
+        // Re-populate with filtered results
+        resultsContainer.innerHTML = '';
+        filtered.forEach(item => {
+            // ... same population code as above
+        });
+    });
+});

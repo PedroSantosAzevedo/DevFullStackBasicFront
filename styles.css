@@ -64,6 +64,46 @@ header {
     border-radius: 4px;
     font-size: 16px;
 }
+/* Add these styles to your existing styles.css */
+
+/* Results container */
+.results-container {
+    flex: 1; /* Takes remaining vertical space */
+    overflow-y: auto; /* Enables vertical scrolling */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    margin-top: 10px;
+}
+
+/* Row template styling */
+.result-row {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    transition: background-color 0.2s;
+}
+
+.result-row:hover {
+    background-color: #f9f9f9;
+}
+
+.result-row.selected {
+    background-color: #e6f2ff;
+    border-left: 3px solid #4d90fe;
+}
+
+.item-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.item-details {
+    font-size: 0.9em;
+    color: #666;
+}
 
 /* Responsive behavior */
 @media (max-width: 768px) {
