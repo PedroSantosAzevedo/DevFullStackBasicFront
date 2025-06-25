@@ -4,16 +4,35 @@
   --------------------------------------------------------------------------------------
 */
 const getList = async () => {
-  let url = 'http://127.0.0.1:5000/produtos';
+  let url = 'http://192.168.0.5:5000/pacientes';
   fetch(url, {
     method: 'get',
   })
     .then((response) => response.json())
     .then((data) => {
-      data.produtos.forEach(item => insertList(item.nome, item.quantidade, item.valor))
+      populateResults(data.pacientes);
+      // data.pacientes.forEach(item => insertList(item.nome, item.idade, item.sexo))
     })
     .catch((error) => {
       console.error('Error:', error);
+    });
+}
+
+const getPatientByCPF = async (cpf) => {
+  let url = `http://192.168.0.5:5000/pacienteCompleto`;
+  const formData = new FormData();
+  formData.append('cpf', cpf);
+  fetch(url, {
+    method: 'post',
+    body: formData
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      showDetails(data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      detailContent.innerHTML = "Erro ao buscar paciente.";
     });
 }
 
@@ -71,6 +90,7 @@ const removeElement = () => {
   }
 }
 
+getList();
 /*
   --------------------------------------------------------------------------------------
   Função para deletar um item da lista do servidor via requisição DELETE
@@ -109,54 +129,23 @@ const newItem = () => {
   }
 }
 
-/*
-  --------------------------------------------------------------------------------------
-  Função para inserir items na lista apresentada
-  --------------------------------------------------------------------------------------
-*/
-const insertList = (nameProduct, quantity, price) => {
-  var item = [nameProduct, quantity, price]
-  var table = document.getElementById('myTable');
-  var row = table.insertRow();
-
-  for (var i = 0; i < item.length; i++) {
-    var cel = row.insertCell(i);
-    cel.textContent = item[i];
-  }
-  insertButton(row.insertCell(-1))
-  document.getElementById("newInput").value = "";
-  document.getElementById("newQuantity").value = "";
-  document.getElementById("newPrice").value = "";
-
-  removeElement()
-}
-
-
 // DOM elements
 const resultsContainer = document.getElementById('resultsContainer');
 const rowTemplate = document.getElementById('rowTemplate');
 const detailContent = document.getElementById('detailContent');
 
-// Sample data - replace with your actual data
-const items = [
-    { id: 1, name: "Item One", details: "Description for item one", fullInfo: "Complete details for item one..." },
-    { id: 2, name: "Item Two", details: "Description for item two", fullInfo: "Complete details for item two..." },
-    { id: 3, name: "Item Three", details: "Description for item three", fullInfo: "Complete details for item three..." },
-    // ... add more items
-];
-
 // Populate results list
-function populateResults() {
+function populateResults(items = []) {
     resultsContainer.innerHTML = ''; // Clear existing content
     
     items.forEach(item => {
-        // Clone the template
+        // Clona o template
         const clone = rowTemplate.content.cloneNode(true);
         const row = clone.querySelector('.result-row');
         
         // Populate with data
-        row.querySelector('.item-name').textContent = item.name;
-        row.querySelector('.item-details').textContent = item.details;
+        row.querySelector('.item-name').textContent = item.first_name + ' ' + item.last_name;
+        row.querySelector('.item-details').textContent = item.phone_number;
         
         // Add click handler
         row.addEventListener('click', () => {
@@ -169,7 +158,9 @@ function populateResults() {
             row.classList.add('selected');
             
             // Show details in right panel
-            showDetails(item);
+            // showDetails(item);
+
+            getPatientByCPF(item.cpf);
         });
         
         // Add to container
@@ -179,35 +170,35 @@ function populateResults() {
 
 // Show item details
 function showDetails(item) {
+  console.log(item);
     detailContent.innerHTML = `
-        <h3>${item.name}</h3>
-        <p>${item.fullInfo}</p>
+        <h3>${item.first_name + ' ' + item.last_name}</h3>
+        <p>${item.address}</p>
         <div class="meta-info">
-            <p><strong>ID:</strong> ${item.id}</p>
-            <p><strong>Last Updated:</strong> ${new Date().toLocaleDateString()}</p>
+            <p><strong>CPF:</strong> ${item.cpf}</p>
         </div>
     `;
 }
 
-populateResults();
+
 
 // Initialize when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    populateResults();
+// document.addEventListener('DOMContentLoaded', () => {
+//     populateResults(items);
     
-    // Add search functionality
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        const filtered = items.filter(item => 
-            item.name.toLowerCase().includes(term) || 
-            item.details.toLowerCase().includes(term)
-        );
+//     // Add search functionality
+//     const searchInput = document.getElementById('searchInput');
+//     searchInput.addEventListener('input', (e) => {
+//         const term = e.target.value.toLowerCase();
+//         const filtered = items.filter(item => 
+//             item.name.toLowerCase().includes(term) || 
+//             item.details.toLowerCase().includes(term)
+//         );
         
-        // Re-populate with filtered results
-        resultsContainer.innerHTML = '';
-        filtered.forEach(item => {
-            // ... same population code as above
-        });
-    });
-});
+//         // Re-populate with filtered results
+//         resultsContainer.innerHTML = '';
+//         filtered.forEach(item => {
+//             // ... same population code as above
+//         });
+//     });
+// });
