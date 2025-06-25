@@ -13,17 +13,17 @@
     </header>
     <div class="dashboard-container">
         <div class="left-panel">
-            <div class="panel-header">Search</div>
+            <div class="panel-header">
+                <span>Patients</span>
+                <button id="newPatientBtn" class="add-btn">+ New Patient</button>
+            </div>
             <div class="search-container">
                 <input type="text" id="searchInput" placeholder="Search items...">
             </div>
             
-            <!-- Scrollable results container -->
             <div class="results-container" id="resultsContainer">
-                <!-- Results will be populated here by JavaScript -->
             </div>
             
-            <!-- Row template (hidden) -->
             <template id="rowTemplate">
                 <div class="result-row">
                     <span class="item-name"></span>
@@ -32,13 +32,52 @@
             </template>
         </div>
         
-        <div class="right-panel">
-            <div class="panel-header">Details</div>
+     <div class="right-panel">
+            <div class="panel-header">Detalhes do Paciente</div>
             <div id="detailContent">
-                <!-- Detailed information will be populated here -->
             </div>
+            
+            <template id="patientFormTemplate">
+                <div class="patient-form">
+                    <form id="patientForm">
+                        <div class="form-group">
+                            <label for="patientName">Nome</label>
+                            <input type="text" id="patientName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="patientNickName">Sobrenome</label>
+                            <input type="text" id="patientNickName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="patientCPF">CPF</label>
+                            <input type="text" id="patientCPF" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="patientAddress">Endereço</label>
+                            <textarea id="patientAddress" rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="patientPhone">Número de Telefone</label>
+                            <input type="tel" id="patientPhone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="patientEmail">Email</label>
+                            <input type="email" id="patientEmail">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" id="cancelBtn" class="btn secondary">Cancelar</button>
+                            <button type="submit" class="btn primary">Salvar Paciente </button>
+                        </div>
+                    </form>
+                </div>
+            </template>
         </div>
-    </div>
     
     <script src="scripts.js"></script>
 </body>

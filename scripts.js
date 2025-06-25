@@ -1,16 +1,25 @@
-/*
-  --------------------------------------------------------------------------------------
-  Função para obter a lista existente do servidor via requisição GET
-  --------------------------------------------------------------------------------------
-*/
+// DOM elements
+const resultsContainer = document.getElementById('resultsContainer');
+const rowTemplate = document.getElementById('rowTemplate');
+const detailContent = document.getElementById('detailContent');
+const newPatientBtn = document.getElementById('newPatientBtn');
+const patientFormTemplate = document.getElementById('patientFormTemplate');
+const urlPrefix = 'http://192.168.0.5:5000';
+let allPatients = [];
+let patients = [];
+
+
+
 const getList = async () => {
-  let url = 'http://192.168.0.5:5000/pacientes';
+  let url = urlPrefix + '/pacientes';
   fetch(url, {
     method: 'get',
   })
     .then((response) => response.json())
     .then((data) => {
       populateResults(data.pacientes);
+      allPatients = data.pacientes;
+      patients = data.pacientes;
       // data.pacientes.forEach(item => insertList(item.nome, item.idade, item.sexo))
     })
     .catch((error) => {
@@ -19,7 +28,7 @@ const getList = async () => {
 }
 
 const getPatientByCPF = async (cpf) => {
-  let url = `http://192.168.0.5:5000/pacienteCompleto`;
+  const url = urlPrefix + `/pacienteCompleto`;
   const formData = new FormData();
   formData.append('cpf', cpf);
   fetch(url, {
@@ -36,15 +45,42 @@ const getPatientByCPF = async (cpf) => {
     });
 }
 
-const postItem = async (inputProduct, inputQuantity, inputPrice) => {
-  const formData = new FormData();
-  formData.append('nome', inputProduct);
-  formData.append('quantidade', inputQuantity);
-  formData.append('valor', inputPrice);
 
-  let url = 'http://127.0.0.1:5000/produto';
+
+function setupEventListeners() {
+    // New Patient button
+    newPatientBtn.addEventListener('click', showNewPatientForm);
+    
+}
+
+function showNewPatientForm() {
+    const clone = patientFormTemplate.content.cloneNode(true);
+    detailContent.innerHTML = '';
+    detailContent.appendChild(clone);
+    
+    // Add form submission handler
+    const form = document.getElementById('patientForm');
+    form.addEventListener('submit', handleFormSubmit);
+    
+    // Add cancel button handler
+    const cancelBtn = document.getElementById('cancelBtn');
+    cancelBtn.addEventListener('click', () => {
+        console.log('Cancel button clicked');
+        detailContent.innerHTML = '<p class="empty-state">Select a patient to view details</p>';
+    });
+}
+
+
+
+const deleteItem = (item) => {
+  console.log(item)
+  let url = urlPrefix + '/patient';
+
+  const formData = new FormData();
+  formData.append('cpf', item.cpf);
+
   fetch(url, {
-    method: 'post',
+    method: 'delete',
     body: formData
   })
     .then((response) => response.json())
@@ -53,86 +89,40 @@ const postItem = async (inputProduct, inputQuantity, inputPrice) => {
     });
 }
 
+function handleFormSubmit() {
+  event.preventDefault();
+  console.log('Form submitted');
 
-/*
-  --------------------------------------------------------------------------------------
-  Função para criar um botão close para cada item da lista
-  --------------------------------------------------------------------------------------
-*/
-const insertButton = (parent) => {
-  let span = document.createElement("span");
-  let txt = document.createTextNode("\u00D7");
-  span.className = "close";
-  span.appendChild(txt);
-  parent.appendChild(span);
+  const firstName = document.getElementById('patientName').value;
+  const lastName = document.getElementById('patientNickName').value;
+  const address =  document.getElementById('patientAddress').value;
+  const phone =    document.getElementById('patientPhone').value || '';
+  const email =    document.getElementById('patientEmail').value || '';
+  const cpf =      document.getElementById('patientCPF').value;
+
+  const formData = new FormData();
+  formData.append('first_name', firstName);
+  formData.append('last_name', lastName);
+  formData.append('address', address);
+  formData.append('phone_number', phone);
+  formData.append('email', email);
+  formData.append('cpf', cpf);
+
+
+    const url = urlPrefix + '/paciente';
+
+    fetch(url, {
+        method: 'post',
+        body: formData
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            getList(); // Refresh the list after adding
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 }
-
-
-/*
-  --------------------------------------------------------------------------------------
-  Função para remover um item da lista de acordo com o click no botão close
-  --------------------------------------------------------------------------------------
-*/
-const removeElement = () => {
-  let close = document.getElementsByClassName("close");
-  // var table = document.getElementById('myTable');
-  let i;
-  for (i = 0; i < close.length; i++) {
-    close[i].onclick = function () {
-      let div = this.parentElement.parentElement;
-      const nomeItem = div.getElementsByTagName('td')[0].innerHTML
-      if (confirm("Você tem certeza?")) {
-        div.remove()
-        deleteItem(nomeItem)
-        alert("Removido!")
-      }
-    }
-  }
-}
-
-getList();
-/*
-  --------------------------------------------------------------------------------------
-  Função para deletar um item da lista do servidor via requisição DELETE
-  --------------------------------------------------------------------------------------
-*/
-const deleteItem = (item) => {
-  console.log(item)
-  let url = 'http://127.0.0.1:5000/produto?nome=' + item;
-  fetch(url, {
-    method: 'delete'
-  })
-    .then((response) => response.json())
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-}
-
-/*
-  --------------------------------------------------------------------------------------
-  Função para adicionar um novo item com nome, quantidade e valor 
-  --------------------------------------------------------------------------------------
-*/
-const newItem = () => {
-  let inputProduct = document.getElementById("newInput").value;
-  let inputQuantity = document.getElementById("newQuantity").value;
-  let inputPrice = document.getElementById("newPrice").value;
-
-  if (inputProduct === '') {
-    alert("Escreva o nome de um item!");
-  } else if (isNaN(inputQuantity) || isNaN(inputPrice)) {
-    alert("Quantidade e valor precisam ser números!");
-  } else {
-    insertList(inputProduct, inputQuantity, inputPrice)
-    postItem(inputProduct, inputQuantity, inputPrice)
-    alert("Item adicionado!")
-  }
-}
-
-// DOM elements
-const resultsContainer = document.getElementById('resultsContainer');
-const rowTemplate = document.getElementById('rowTemplate');
-const detailContent = document.getElementById('detailContent');
 
 // Populate results list
 function populateResults(items = []) {
@@ -180,25 +170,31 @@ function showDetails(item) {
     `;
 }
 
+function addSearchFunctionality() {
+
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', (e) => {
+        if (e.target.value === '' || e.target.value === null) {
+            resultsContainer.innerHTML = '';
+            populateResults(allPatients);
+            return;
+        } 
+        console.log('Search input changed:', e.target.value.toLowerCase());
+
+        const term = e.target.value.toString().toLowerCase();
+
+         const filtered = allPatients.filter(item =>
+            item.first_name.toLowerCase().includes(term) ||
+            item.last_name.toLowerCase().includes(term)
+        );
+        // Re-populate with filtered results
+        resultsContainer.innerHTML = '';
+        patients = filtered;
+        populateResults(filtered);
+    });
+};
 
 
-// Initialize when page loads
-// document.addEventListener('DOMContentLoaded', () => {
-//     populateResults(items);
-    
-//     // Add search functionality
-//     const searchInput = document.getElementById('searchInput');
-//     searchInput.addEventListener('input', (e) => {
-//         const term = e.target.value.toLowerCase();
-//         const filtered = items.filter(item => 
-//             item.name.toLowerCase().includes(term) || 
-//             item.details.toLowerCase().includes(term)
-//         );
-        
-//         // Re-populate with filtered results
-//         resultsContainer.innerHTML = '';
-//         filtered.forEach(item => {
-//             // ... same population code as above
-//         });
-//     });
-// });
+addSearchFunctionality();
+getList();
+newPatientBtn.addEventListener('click', showNewPatientForm);
