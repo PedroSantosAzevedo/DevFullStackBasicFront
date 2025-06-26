@@ -4,7 +4,7 @@ const rowTemplate = document.getElementById('rowTemplate');
 const detailContent = document.getElementById('detailContent');
 const newPatientBtn = document.getElementById('newPatientBtn');
 const patientFormTemplate = document.getElementById('patientFormTemplate');
-const urlPrefix = 'http://192.168.0.5:5000';
+const urlPrefix = 'http://localhost:5000';
 let allPatients = [];
 let patients = [];
 
