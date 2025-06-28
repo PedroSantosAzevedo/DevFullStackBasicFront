@@ -14,11 +14,11 @@
     <div class="dashboard-container">
         <div class="left-panel">
             <div class="panel-header">
-                <span>Patients</span>
-                <button id="newPatientBtn" class="add-btn">+ New Patient</button>
+                <span>Pacientes</span>
+                <button id="newPatientBtn" class="add-btn">+ Novo Paciente</button>
             </div>
             <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search items...">
+                <input type="text" id="searchInput" placeholder="Buscar itens...">
             </div>
             
             <div class="results-container" id="resultsContainer">
@@ -36,7 +36,16 @@
             <div class="panel-header">Detalhes do Paciente</div>
             <div id="detailContent">
             </div>
-            
+            <template id="detailTemplate">
+                <div class="patient-detail">
+                    <h2><strong><span class="patient-fullname"></span></h2>
+                    <p><strong>CPF:</strong> <span class="patient-cpf"></span></p>
+                    <p><strong>Endereço:</strong> <span class="patient-address"></span></p>
+                    <p><strong>Telefone:</strong> <span class="patient-phone"></span></p>
+                    <p><strong>Email:</strong> <span class="patient-email"></span></p>
+                    <button id="editPatientBtn" class="btn delete">Remover Paciente</button>
+                </div>
+            </template>
             <template id="patientFormTemplate">
                 <div class="patient-form">
                     <form id="patientForm">

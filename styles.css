@@ -179,6 +179,14 @@ header {
     background-color: #2196F3;
     color: white;
 }
+.btn.delete {
+    background-color: #f32121;
+    color: white;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
 
 .btn.primary:hover {
     background-color: #0b7dda;

@@ -4,6 +4,8 @@ const rowTemplate = document.getElementById('rowTemplate');
 const detailContent = document.getElementById('detailContent');
 const newPatientBtn = document.getElementById('newPatientBtn');
 const patientFormTemplate = document.getElementById('patientFormTemplate');
+const detailTemplate = document.getElementById('detailTemplate');
+
 const urlPrefix = 'http://localhost:5000';
 let allPatients = [];
 let patients = [];
@@ -20,7 +22,6 @@ const getList = async () => {
       populateResults(data.pacientes);
       allPatients = data.pacientes;
       patients = data.pacientes;
-      // data.pacientes.forEach(item => insertList(item.nome, item.idade, item.sexo))
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -48,7 +49,6 @@ const getPatientByCPF = async (cpf) => {
 
 
 function setupEventListeners() {
-    // New Patient button
     newPatientBtn.addEventListener('click', showNewPatientForm);
     
 }
@@ -58,11 +58,9 @@ function showNewPatientForm() {
     detailContent.innerHTML = '';
     detailContent.appendChild(clone);
     
-    // Add form submission handler
     const form = document.getElementById('patientForm');
     form.addEventListener('submit', handleFormSubmit);
     
-    // Add cancel button handler
     const cancelBtn = document.getElementById('cancelBtn');
     cancelBtn.addEventListener('click', () => {
         console.log('Cancel button clicked');
@@ -70,18 +68,13 @@ function showNewPatientForm() {
     });
 }
 
-
-
 const deleteItem = (item) => {
-  console.log(item)
-  let url = urlPrefix + '/patient';
+  console.log("delete",item)
+  let url = urlPrefix + '/delPaciente?cpf=' + item.cpf;
 
-  const formData = new FormData();
-  formData.append('cpf', item.cpf);
 
   fetch(url, {
-    method: 'delete',
-    body: formData
+    method: 'delete'
   })
     .then((response) => response.json())
     .catch((error) => {
@@ -117,57 +110,50 @@ function handleFormSubmit() {
     })
         .then((response) => response.json())
         .then((data) => {
-            getList(); // Refresh the list after adding
+            getList(); 
         })
         .catch((error) => {
             console.error('Error:', error);
         });
 }
 
-// Populate results list
 function populateResults(items = []) {
-    resultsContainer.innerHTML = ''; // Clear existing content
+    resultsContainer.innerHTML = ''; 
     
     items.forEach(item => {
-        // Clona o template
         const clone = rowTemplate.content.cloneNode(true);
         const row = clone.querySelector('.result-row');
         
-        // Populate with data
         row.querySelector('.item-name').textContent = item.first_name + ' ' + item.last_name;
         row.querySelector('.item-details').textContent = item.phone_number;
         
-        // Add click handler
         row.addEventListener('click', () => {
-            // Remove previous selection
             document.querySelectorAll('.result-row').forEach(r => {
                 r.classList.remove('selected');
             });
             
-            // Select current row
             row.classList.add('selected');
-            
-            // Show details in right panel
-            // showDetails(item);
-
             getPatientByCPF(item.cpf);
         });
         
-        // Add to container
         resultsContainer.appendChild(clone);
     });
 }
 
-// Show item details
 function showDetails(item) {
   console.log(item);
-    detailContent.innerHTML = `
-        <h3>${item.first_name + ' ' + item.last_name}</h3>
-        <p>${item.address}</p>
-        <div class="meta-info">
-            <p><strong>CPF:</strong> ${item.cpf}</p>
-        </div>
-    `;
+  const clone = detailTemplate.content.cloneNode(true);
+  clone.querySelector('.patient-fullname').textContent = item.first_name + ' ' + item.last_name;
+  clone.querySelector('.patient-cpf').textContent = item.cpf;
+  clone.querySelector('.patient-address').textContent = item.address;
+  clone.querySelector('.patient-phone').textContent = item.phone_number || 'N/A';
+  clone.querySelector('.patient-email').textContent = item.email || 'N/A';
+
+  clone.querySelector('.btn.delete').addEventListener('click', () => {
+    deleteItem(item);
+  });
+  detailContent.innerHTML = '';
+  detailContent.appendChild(clone);
 }
 
 function addSearchFunctionality() {
@@ -187,7 +173,6 @@ function addSearchFunctionality() {
             item.first_name.toLowerCase().includes(term) ||
             item.last_name.toLowerCase().includes(term)
         );
-        // Re-populate with filtered results
         resultsContainer.innerHTML = '';
         patients = filtered;
         populateResults(filtered);
