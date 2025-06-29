@@ -56,6 +56,11 @@ const deleteItem = (item) => {
     method: 'delete'
   })
     .then((response) => response.json())
+    .then(() => {
+      detailContent.innerHTML = '';
+      detailContent.innerHTML = '<p class="empty-state">Paciente removido com sucesso</p>';
+      getList();
+    })
     .catch((error) => {
       console.error('Error:', error);
     });
