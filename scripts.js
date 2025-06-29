@@ -5,6 +5,7 @@ const detailContent = document.getElementById('detailContent');
 const newPatientBtn = document.getElementById('newPatientBtn');
 const patientFormTemplate = document.getElementById('patientFormTemplate');
 const detailTemplate = document.getElementById('detailTemplate');
+const rightPanelTitle = document.getElementById('panel-header');
 
 const urlPrefix = 'http://localhost:5000';
 let allPatients = [];
@@ -62,9 +63,10 @@ function showNewPatientForm() {
     form.addEventListener('submit', handleFormSubmit);
     
     const cancelBtn = document.getElementById('cancelBtn');
+    rightPanelTitle.textContent = 'Novo Paciente';
     cancelBtn.addEventListener('click', () => {
         console.log('Cancel button clicked');
-        detailContent.innerHTML = '<p class="empty-state">Select a patient to view details</p>';
+        detailContent.innerHTML = '<p class="empty-state">Selecione um paciente para ver os detalhes</p>';
     });
 }
 
@@ -148,7 +150,7 @@ function showDetails(item) {
   clone.querySelector('.patient-address').textContent = item.address;
   clone.querySelector('.patient-phone').textContent = item.phone_number || 'N/A';
   clone.querySelector('.patient-email').textContent = item.email || 'N/A';
-
+  rightPanelTitle.textContent = 'Detalhes do Paciente';
   clone.querySelector('.btn.delete').addEventListener('click', () => {
     deleteItem(item);
   });

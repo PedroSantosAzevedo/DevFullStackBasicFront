@@ -4,6 +4,14 @@
     padding: 0;
 }
 
+h1 {
+    font-size: 2em;
+    color: #e6e6e6;
+    margin: 0;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+}
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -13,12 +21,12 @@ body {
 
 header {
     padding: 20px;
-    background: #f0f0f0;
+    background: #249d81;
     text-align: center;
 }
 
 .subtitle {
-    color: #666;
+    color: #e6e6e6;
     margin-top: 5px;
     font-size: 0.9em;
 }
@@ -41,7 +49,7 @@ header {
 }
 
 .right-panel {
-    background: #fff;
+    background: #f8f8f8;
     border-left: 1px solid #ddd;
 }
 
@@ -87,7 +95,7 @@ header {
 }
 
 .result-row:hover {
-    background-color: #f9f9f9;
+    background-color: #f8f8f8;
 }
 
 .result-row.selected {
@@ -107,7 +115,7 @@ header {
 
 
 .add-btn {
-    background-color: #4CAF50;
+    background-color: #249d81;
     color: white;
     border: none;
     padding: 8px 15px;
@@ -118,7 +126,7 @@ header {
 }
 
 .add-btn:hover {
-    background-color: #45a049;
+    background-color: #249d81;
 }
 
 .panel-header {

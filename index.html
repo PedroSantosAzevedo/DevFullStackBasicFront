@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search & Detail Dashboard</title>
+    <title>Lista de Pacientes</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <h1>Lista de pacientes</h1>
-        <p class="subtitle">Selecione um item para uma visualização detalhada</p>
+        <p class="subtitle">Selecione um paciente para uma visualização detalhada</p>
     </header>
     <div class="dashboard-container">
         <div class="left-panel">
@@ -18,7 +18,7 @@
                 <button id="newPatientBtn" class="add-btn">+ Novo Paciente</button>
             </div>
             <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Buscar itens...">
+                <input type="text" id="searchInput" placeholder="Buscar pacientes...">
             </div>
             
             <div class="results-container" id="resultsContainer">
@@ -33,7 +33,7 @@
         </div>
         
      <div class="right-panel">
-            <div class="panel-header">Detalhes do Paciente</div>
+            <div class="panel-header" id="panel-header">Detalhes do Paciente</div>
             <div id="detailContent">
             </div>
             <template id="detailTemplate">
@@ -43,7 +43,7 @@
                     <p><strong>Endereço:</strong> <span class="patient-address"></span></p>
                     <p><strong>Telefone:</strong> <span class="patient-phone"></span></p>
                     <p><strong>Email:</strong> <span class="patient-email"></span></p>
-                    <button id="editPatientBtn" class="btn delete">Remover Paciente</button>
+                    <button id="deletePatientBtn" class="btn delete">Remover Paciente</button>
                 </div>
             </template>
             <template id="patientFormTemplate">
