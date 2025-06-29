@@ -12,7 +12,7 @@ let allPatients = [];
 let patients = [];
 
 
-
+// Requests
 const getList = async () => {
   let url = urlPrefix + '/pacientes';
   fetch(url, {
@@ -47,12 +47,21 @@ const getPatientByCPF = async (cpf) => {
     });
 }
 
+const deleteItem = (item) => {
+  console.log("delete",item)
+  let url = urlPrefix + '/delPaciente?cpf=' + item.cpf;
 
 
-function setupEventListeners() {
-    newPatientBtn.addEventListener('click', showNewPatientForm);
-    
+  fetch(url, {
+    method: 'delete'
+  })
+    .then((response) => response.json())
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 }
+
+
 
 function showNewPatientForm() {
     const clone = patientFormTemplate.content.cloneNode(true);
@@ -67,20 +76,6 @@ function showNewPatientForm() {
     cancelBtn.addEventListener('click', () => {
         console.log('Cancel button clicked');
         detailContent.innerHTML = '<p class="empty-state">Selecione um paciente para ver os detalhes</p>';
-    });
-}
-
-const deleteItem = (item) => {
-  console.log("delete",item)
-  let url = urlPrefix + '/delPaciente?cpf=' + item.cpf;
-
-
-  fetch(url, {
-    method: 'delete'
-  })
-    .then((response) => response.json())
-    .catch((error) => {
-      console.error('Error:', error);
     });
 }
 
@@ -181,6 +176,10 @@ function addSearchFunctionality() {
     });
 };
 
+function setupEventListeners() {
+    newPatientBtn.addEventListener('click', showNewPatientForm);
+    
+}
 
 addSearchFunctionality();
 getList();
